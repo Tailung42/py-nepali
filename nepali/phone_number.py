@@ -18,7 +18,84 @@ class Operator(Enum):
         return self.value
 
     def __repr__(self) -> str:
-        return f"<Operator: {self.value}>"
+        return f"<Operator: {self.value}>" 
+
+from enum import Enum
+
+class AreaCode(Enum):
+    ACHHAM = ("Achham", "097")
+    BAITADI = ("Baitadi", "095")
+    BANKE = ("Banke", "081")
+    BARA = ("Bara", "053")
+    BARDIA = ("Bardia", "084")
+    BHAKTAPUR = ("Bhaktapur", "01")
+    BHERI = ("Bheri", "083")
+    BHOJPUR = ("Bhojpur", "029")
+    BIRGUNJ = ("Birgunj", "051")
+    CHITWAN = ("Chitwan", "056")
+    DADELDHURA = ("Dadeldhura", "096")
+    DAILEKH = ("Dailekh", "089")
+    DARCHULA = ("Darchula", "093")
+    DHADING = ("Dhading", "010")
+    DHANKUTA = ("Dhankuta", "026")
+    DHANUSHA = ("Dhanusha", "041")
+    DHAWALAGIRI = ("Dhawalagiri", "068")
+    DOLKHA = ("Dolkha", "049")
+    DOTI = ("Doti", "094")
+    GANDAKI = ("Gandaki", "064")
+    GORKHA = ("Gorkha", "064")
+    GULMI = ("Gulmi", "079")
+    ILAM = ("Ilam", "027")
+    JANAKPUR = ("Janakpur", "046")
+    JUMLA = ("Jumla", "087")
+    KAILALI = ("Kailali", "091")
+    KAPILVASTU = ("Kapilvastu", "076")
+    KASKI = ("Kaski", "061")
+    KATHMANDU = ("Kathmandu", "01")
+    KHOTANG = ("Khotang", "036")
+    KOSHI = ("Koshi", "025")
+    LAMJUNG = ("Lamjung", "066")
+    LUMBINI = ("Lumbini", "071")
+    MAHAKALI = ("Mahakali", "099")
+    MAHOTTARI = ("Mahottari", "044")
+    MAKWANPUR = ("Makwanpur", "057")
+    MECHI = ("Mechi", "023")
+    MORANG = ("Morang", "021")
+    MYAGDI = ("Myagdi", "069")
+    N_PARASI = ("N. Parasi", "078")
+    NARAYANI = ("Narayani", "055")
+    OKHALDHUNGA = ("Okhaldhunga", "037")
+    PALPA = ("Palpa", "075")
+    PANCHTHAR = ("Panchthar", "024")
+    PARBAT = ("Parbat", "067")
+    PARSA = ("Parsa", "051")
+    PATAN = ("Patan", "01")
+    POKHARA = ("Pokhara", "061")
+    PYUTHAN = ("Pyuthan", "086")
+    RAPTI = ("Rapti", "082")
+    RUPANDEHI = ("Rupandehi", "071")
+    S_PALCHOK = ("S. Palchok", "011")
+    SAGARMATHA = ("Sagarmatha", "033")
+    SAPTARI = ("Saptari", "031")
+    SETI = ("Seti", "092")
+    SINDHULI = ("Sindhuli", "047")
+    SOLUKHUMBU = ("Solukhumbu", "038")
+    SYANGIA = ("Syangia", "063")
+    UDAYPUR = ("Udaypur", "035")
+
+    def __init__(self, district: str, area_code: str):
+        self.district= district
+        self.area_code = area_code
+
+    def __str__(self):
+        return f"{self.district}: {self.area_code}"
+
+    @classmethod
+    def get_by_area_code(cls, area_code:str):
+        for area in cls:
+            if area.value[1] == area_code:
+                return area
+        return None
 
 
 def is_mobile_number(number: str) -> bool:
@@ -170,14 +247,30 @@ def _parse_landline_number(number) -> dict:
         "area_code": <AreaCode>
     }
     """
-    number = get_exact_number(number)
-
+    
     # adding zero
     if number[0] != "0":
         number = f"0{number}"
+        
+    number = get_exact_number(number)
+    area_code = _get_area_code(number)
+    district = _get_district(area_code)
+    
+    if not district:
+        return None
+     
 
     return {
         "type": "Landline",
         "number": number,
         "area_code": _get_area_code(number),
+        "district": district,
     }
+
+
+def _get_district(area_code: str) -> AreaCode | None:
+    """
+    Returns the details of the area code. 
+    """
+    return AreaCode.get_by_area_code(area_code).district
+    
