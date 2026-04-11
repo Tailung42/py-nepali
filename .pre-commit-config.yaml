@@ -9,24 +9,12 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
 
-  - repo: https://github.com/akaihola/darker
-    rev: v2.1.1
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.7
     hooks:
-      - id: darker
-        files: ^(nepali/|tests/)
-        args:
-          - --isort
-          - --flynt
-          - --lint=flake8 --max-line-length=88 --ignore=E203,W503
-          - --lint=mypy # --strict # commenting strict for now as we haven't maintained typing completely
-          - --lint=pylint --max-line-length=88 --disable=W0511
-        additional_dependencies:
-          - black==26.1.0
-          - flake8==7.3.0
-          - flynt==1.0.6
-          - isort==7.0.0
-          - mypy==1.19.1
-          - pylint==4.0.4
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
 
   - repo: https://github.com/opensource-nepal/commitlint
     rev: v1.13.3
